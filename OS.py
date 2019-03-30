@@ -17,17 +17,18 @@ class Process:
         self.turnAroundTime = 0
 
 
-class QueryManagement:
+class FacultyQueryManagement:
     # QueryManagement class to handel Query
     def __init__(self):
         # Initializing default values
         self.count = 0
         # self.arrival_time = 0
         # self.burst_time = 0
-        self.quantum_time = 0
-        self.studentProcess = list()
+        self.quantum_time = 2
+        # self.studentProcess = list()
         self.facultyProcess = list()
         self.Time = 0
+        self.no_of_process = 0
 
     def getWaitingTime(self):
         # Copying the Burst Time into remaining time
@@ -36,16 +37,16 @@ class QueryManagement:
             process.remaining = process.burst_time
 
         while True:
-            print("In Get Waiting Time function while loop")
+            # print("In Get Waiting Time function while loop")
             done = True
             # Traversing all process
             for process in self.facultyProcess:
-
+                print("Procee Name: ", process.process_name, "is running")
                 # If burst time of process is greater than 0
                 # Then only process
                 if process.remaining > 0:
                     done = False
-
+                    print("Process remaining time = ", process.remaining)
                     if process.remaining > self.quantum_time:
                         # Incrementing Time
                         self.Time += self.quantum_time
@@ -71,7 +72,7 @@ class QueryManagement:
         for process in self.facultyProcess:
             process.turnAroundTime = process.burst_time + process.waitingTime
 
-    def getAvarageTime(self):
+    def getAverageTime(self):
         print("In Get Average Time function")
         self.getWaitingTime()
         self.getTurnAroundTime()
@@ -83,9 +84,10 @@ class QueryManagement:
             totalWaitingTime += process.waitingTime
             totalTurnAroundTime += process.turnAroundTime
             print(
-                " " + process.process_name + " " + process.burst_time + " " + process.waitingTime + " " + process.turnAroundTime)
-        print("Average Waiting Time = ", (totalWaitingTime / self.facultyProcess.count()))
-        print("Average Turn Around Time = ", (totalTurnAroundTime / self.facultyProcess.count()))
+                " " + process.process_name + " " + str(process.burst_time) + " " + str(process.waitingTime) + " " + str(
+                    process.turnAroundTime))
+        print("Average Waiting Time = ", (totalWaitingTime / len(self.facultyProcess)))
+        print("Average Turn Around Time = ", (totalTurnAroundTime / len(self.facultyProcess)))
 
     def createProcess(self, name, arrival_time, burst_time):
         # createProcess method to create a process
@@ -96,108 +98,131 @@ class QueryManagement:
         self.facultyProcess.append(process)
 
     def setTimeQuantum(self):
+        # To initialize the Time Quantum
         self.quantum_time = int(input("Enter the Quantum TIme for Faculty Queue: "))
 
     def createProcessList(self):
-        for count in range(no_of_process):
+        # To Create List of Process For the Faculty queue
+        for count in range(self.no_of_process):
             print("Enter the details of Process" + str(count + 1))
             name = input("Process Name: ")
             arrival_time = int(input("Arrival Time: "))
             burst_time = int(input("Burst Time"))
             self.createProcess(name, arrival_time, burst_time)
 
-    # # Faculty Queue begins here
-    # def facultyQueue(self, no_of_process):
-    #     totle_time = 0
-    #     queue = 0
-    #     round_robin = list()
-    #     flag = False
-    #     x = 0
-    #     n = 0
-    #     z = 0
-    #     waiting_time = 0
-    #
-    #     for count in range(no_of_process):
-    #         print("Enter the details of Process" + str(count + 1))
-    #         name = input("Process Name: ")
-    #         arrival_time = int(input("Arrival Time: "))
-    #         burst_time = int(input("Burst Time"))
-    #         self.createProcess(name, arrival_time, burst_time)
-    #
-    #     self.quantum_time = int(input("Enter the Quantum TIme for Faculty Queue: "))
-    #
-    #     # Sorting the processes by their ARRIVAL time
-    #     # If the ARRIVAL time is same then scheduling is based on First Come First Serve
-    #     for count in range(no_of_process):
-    #         for x in range(count + 1, count):
-    #             if self.facultyProcess[count].arrival_time > self.facultyProcess[x].arrival_time:
-    #                 temp = self.facultyProcess[count]
-    #                 self.facultyProcess[count] = self.facultyProcess[x]
-    #                 self.facultyProcess[x] = temp
-    #
-    #     # Initialy all the burst time is remaining and completion of process is zero
-    #
-    #     while True:
-    #         for count in range(no_of_process):
-    #             if totle_time >= self.facultyProcess[count].arrival_time:
-    #                 z = 0
-    #                 for x in range(queue + 1):
-    #                     if round_robin[x] == count:
-    #                         z += 1
-    #                 if z == 0:
-    #                     queue += 1
-    #                     round_robin[queue] = count  # check
-    #         if queue == 0:
-    #             n = 0
-    #         if self.facultyProcess[n].remaining == 0:
-    #             n += 1
-    #         if n > queue:
-    #             n = (n - 1) % queue
-    #         if n <= queue:
-    #             if self.facultyProcess[n].remaining > 0:
-    #                 if self.facultyProcess[n].remaining < self.quantum_time:
-    #                     totle_time += self.facultyProcess[n].remaining
-    #                     self.facultyProcess[n].remaining = 0
-    #                 else:
-    #                     totle_time += self.quantum_time
-    #                     self.facultyProcess[n].remaining -= self.quantum_time
-    #                 print("Completion time:", self.facultyProcess[n].completion)
-    #                 self.facultyProcess[n].completion_time = totle_time
-    #                 print("Total time:  " + str(totle_time))
-    #                 n += 1
-    #         flag = False
-    #         for count in range(no_of_process):
-    #             if self.facultyProcess[count].remaining > 0:
-    #                 flag = True
-    #         if flag == False:
-    #             break
-    #
-    #     print("*********************************************")
-    #     print("********ROUND ROBIN ALGORITHM OUTPUT*********")
-    #     print("*********************************************")
-    #     print("Process Name | Arrival Time | Burst Time | Completion Time|")
-    #
-    #     for count in range(no_of_process):
-    #         waiting_time = self.facultyProcess[count].completion_time - self.facultyProcess[count].burst_time - \
-    #                        self.facultyProcess[count].arrival_time
-    #         print(
-    #             "|\t" + str(self.facultyProcess[count].process_name) + "|" + str(
-    #                 self.facultyProcess[count].arrival_time) + "|" +
-    #             str(self.facultyProcess[count].burst_time) + "|" + str(self.facultyProcess[count].completion_time))
+
+class StudentQueryManagement:
+    # QueryManagement class to handel Query
+    def __init__(self):
+        # Initializing default values
+        self.count = 0
+        self.quantum_time = 2
+        self.studentProcess = list()
+        self.Time = 0
+        self.no_of_process = 0
+
+    def getWaitingTime(self):
+        # Copying the Burst Time into remaining time
+        print("In Get Waiting Time function")
+        for process in self.studentProcess:
+            process.remaining = process.burst_time
+
+        while True:
+            # print("In Get Waiting Time function while loop")
+            done = True
+            # Traversing all process
+            for process in self.studentProcess:
+                print("Procee Name: ", process.process_name, "is running")
+                # If burst time of process is greater than 0
+                # Then only process
+                if process.remaining > 0:
+                    done = False
+                    print("Process remaining time = ", process.remaining)
+                    if process.remaining > self.quantum_time:
+                        # Incrementing Time
+                        self.Time += self.quantum_time
+
+                        # Decrementing Burst time
+                        process.remaining -= self.quantum_time
+                    else:
+                        # Increasing value of Time
+                        # How much time process has been processed
+                        self.Time = self.Time + process.remaining
+
+                        # Waiting Time
+                        process.waitingTime = self.Time - process.burst_time
+
+                        # Fully Executed Process
+                        process.remaining = 0
+            if done:
+                break
+
+    # Turn Around Time
+    def getTurnAroundTime(self):
+        print("In Get Turn Around Time function")
+        for process in self.studentProcess:
+            process.turnAroundTime = process.burst_time + process.waitingTime
+
+    def getAverageTime(self):
+        print("In Get Average Time function")
+        self.getWaitingTime()
+        self.getTurnAroundTime()
+        print("Process Burst Time Waiting Time Turn Around Time")
+        totalWaitingTime = 0
+        totalTurnAroundTime = 0
+
+        for process in self.studentProcess:
+            totalWaitingTime += process.waitingTime
+            totalTurnAroundTime += process.turnAroundTime
+            print(
+                " " + process.process_name + " " + str(process.burst_time) + " " + str(process.waitingTime) + " " + str(
+                    process.turnAroundTime))
+        print("Average Waiting Time = ", (totalWaitingTime / len(self.studentProcess)))
+        print("Average Turn Around Time = ", (totalTurnAroundTime / len(self.studentProcess)))
+
+    def createProcess(self, name, arrival_time, burst_time):
+        # createProcess method to create a process
+        process = Process()
+        process.process_name = name
+        process.arrival_time = arrival_time
+        process.burst_time = burst_time
+        self.studentProcess.append(process)
+
+    def setTimeQuantum(self):
+        self.quantum_time = int(input("Enter the Quantum TIme for Student Queue: "))
+
+    def createProcessList(self):
+        # To Create List of Process For the Student queue
+        for count in range(self.no_of_process):
+            print("Enter the details of Process" + str(count + 1))
+            name = input("Process Name: ")
+            arrival_time = int(input("Arrival Time: "))
+            burst_time = int(input("Burst Time"))
+            self.createProcess(name, arrival_time, burst_time)
+
+
+class Access:
+    # Access Class to check the time when to access
+    def __init__(self):
+        self.begin_time = 0
+        self.end_time = 0
 
 
 if __name__ == "__main__":
-    # select_queue = None
     no_of_process = None
-    qm = QueryManagement()
     print("Please choose a queue to post your query:")
     print("1. FACULTY queue")
     print("2. STUDENT queue")
     select_queue = int(input())
     if select_queue == 1:
-        no_of_process = int(input("Enter number of process for FACULTY queue:"))
-        qm.createProcessList()
-        qm.getAvarageTime()
-        # qm.facultyQueue(no_of_process)
+        faculty = FacultyQueryManagement()
+        faculty.no_of_process = int(input("Enter number of process for FACULTY queue:"))
+        faculty.setTimeQuantum()
+        faculty.createProcessList()
+        faculty.getAverageTime()
     else:
-        pass
+        student = StudentQueryManagement()
+        student.no_of_process = int(input("Enter number of process for Student queue:"))
+        student.setTimeQuantum()
+        student.createProcessList()
+        student.getAverageTime()
