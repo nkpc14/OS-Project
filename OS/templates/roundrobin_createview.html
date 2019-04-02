@@ -3,9 +3,9 @@
 {% block create %}
 
 <h1>Create View For Round Robin</h1>
-
-
-
-</script>
-
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="Submit">
+</form>
 {% endblock %}

@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from RoundRobin.views import rr
+from RoundRobin.views import rr, FacultyCreateView,StudentCreateView,ProcessCreateView
+
 urlpatterns = [
-    path('',rr,name="home"),
+    path('', rr, name="home"),
+    path('faculty/', FacultyCreateView.as_view(), name="faculty"),
+    path('student/', StudentCreateView.as_view(), name="student"),
+    path('process/', StudentCreateView.as_view(), name="process"),
     path('admin/', admin.site.urls),
 ]
