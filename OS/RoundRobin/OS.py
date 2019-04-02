@@ -22,10 +22,7 @@ class FacultyQueryManagement:
     def __init__(self):
         # Initializing default values
         self.count = 0
-        # self.arrival_time = 0
-        # self.burst_time = 0
         self.quantum_time = 2
-        # self.studentProcess = list()
         self.facultyProcess = list()
         self.Time = 0
         self.no_of_process = 0
@@ -41,12 +38,12 @@ class FacultyQueryManagement:
             done = True
             # Traversing all process
             for process in self.facultyProcess:
-                print("Procee Name: ", process.process_name, "is running")
+                # print("Process Name: ", process.process_name, "is running")
                 # If burst time of process is greater than 0
                 # Then only process
                 if process.remaining > 0:
                     done = False
-                    print("Process remaining time = ", process.remaining)
+                    # print("Process remaining time = ", process.remaining)
                     if process.remaining > self.quantum_time:
                         # Incrementing Time
                         self.Time += self.quantum_time
@@ -204,8 +201,29 @@ class StudentQueryManagement:
 class Access:
     # Access Class to check the time when to access
     def __init__(self):
-        self.begin_time = 0
+        print("Our System will only work from 10 am to 12 am ")
+        self.begin_time = input("Please Enter the Present Time:")
         self.end_time = 0
+
+    def getStatus(self):
+        if self.begin_time <= self.begin_time:
+            return True
+        else:
+            return False
+
+
+class Validation:
+    def isPositiveInteger(self, data):
+        if data < 0:
+            print("Value Entered can't be Negative")
+            return False
+
+    def isZero(self, data):
+        if data == 0:
+            print("Value Entered can't be Zero")
+            return False
+        elif data <= 0:
+            print("Value Entered can't be Negative")
 
 
 if __name__ == "__main__":

@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from RoundRobin.views import rr
 urlpatterns = [
+    path('',rr,name="home"),
     path('admin/', admin.site.urls),
 ]
