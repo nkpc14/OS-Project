@@ -3,6 +3,7 @@
 {% block create %}
 
 <h1>Create View For Round Robin</h1>
+    <p>{{date}}</p>
 <form action="" method="POST">
     {% csrf_token %}
     {{form.as_p}}

@@ -4,12 +4,10 @@
 # requests queues for students and faculty. Implement a strategy for the same. The summary at the end of the session
 # should include the total time he spent on handling queries and average query time.
 
+
 class ManagementClass:
     def __init__(self):
         self.mainTimer = 0
-
-    def getTimer(self):
-        return self.mainTimer
 
     def incrementTimer(self):
         self.mainTimer += 1
@@ -27,9 +25,13 @@ class Process:
         self.turnAroundTime = 0
 
 
-class FacultyQueryManagement:
+# FACULTY QUERY
+
+
+class FacultyQueryManagement(ManagementClass):
     # QueryManagement class to handel Query
     def __init__(self):
+        super().__init__()
         # Initializing default values
         self.count = 0
         self.quantum_time = 2
@@ -39,12 +41,12 @@ class FacultyQueryManagement:
 
     def getWaitingTime(self):
         # Copying the Burst Time into remaining time
-        print("In Get Waiting Time function")
         for process in self.facultyProcess:
             process.remaining = process.burst_time
 
         while True:
             # print("In Get Waiting Time function while loop")
+            # done is to tell that process is done or not
             done = True
             # Traversing all process
             for process in self.facultyProcess:
@@ -118,9 +120,11 @@ class FacultyQueryManagement:
             self.createProcess(name, arrival_time, burst_time)
 
 
-class StudentQueryManagement:
+class StudentQueryManagement(ManagementClass):
     # QueryManagement class to handel Query
     def __init__(self):
+        # Initializing default values
+        super().__init__()
         self.count = 0
         self.quantum_time = 2
         self.studentProcess = list()
@@ -138,7 +142,7 @@ class StudentQueryManagement:
             done = True
             # Traversing all process
             for process in self.studentProcess:
-                print("Process Name: ", process.process_name, "is running")
+                print("Procee Name: ", process.process_name, "is running")
                 # If burst time of process is greater than 0
                 # Then only process
                 if process.remaining > 0:

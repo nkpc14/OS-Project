@@ -5,29 +5,40 @@
     <title>Round Robin @ Nitish Kumar</title>
 </head>
 <body>
+<h1>Welcome to the Query Management System</h1>
+<h2>Facality</h2>
+<p><a href="{% url 'faculty' %}">Faculty</a></p>
+<h2>Student</h2>
+<p><a href="{% url 'student' %}">Student</a></p>
+<h2>Process</h2>
+<p><a href="{% url 'process' %}">Process</a></p>
 {% block create %}
 
 {% endblock %}
-<h1>Base</h1>
-<h2>Faculty Form</h2>
-<form action="" method="POST">
-    {% csrf_token %}
-    {{facultyform.as_p}}
-    <input type="Submit">
-</form>
-<h2>Student Form</h2>
-<form action="" method="POST">
-    {% csrf_token %}
-    {{studentform.as_p}}
-    <input type="Submit">
-</form>
 
-<h2>Process Form</h2>
-<form action="" method="POST">
-    {% csrf_token %}
-    {{processform.as_p}}
-    <input type="Submit">
-</form>
+
+
+
+<!--<h1>Base</h1>-->
+<!--<h2>Faculty Form</h2>-->
+<!--<form action="" method="POST">-->
+    <!--{% csrf_token %}-->
+    <!--{{facultyform.as_p}}-->
+    <!--<input type="Submit">-->
+<!--</form>-->
+<!--<h2>Student Form</h2>-->
+<!--<form action="" method="POST">-->
+    <!--{% csrf_token %}-->
+    <!--{{studentform.as_p}}-->
+    <!--<input type="Submit">-->
+<!--</form>-->
+
+<!--<h2>Process Form</h2>-->
+<!--<form action="" method="POST">-->
+    <!--{% csrf_token %}-->
+    <!--{{processform.as_p}}-->
+    <!--<input type="Submit">-->
+<!--</form>-->
 
 </body>
 </html>

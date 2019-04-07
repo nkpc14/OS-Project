@@ -4,11 +4,16 @@ from django.views.generic import (
     View,
     DetailView,
     DeleteView,
-    UpdateView
+    UpdateView,
+    ListView
 )
-# from .OS import * as my_os
+from .OS import FacultyQueryManagement as faculty
+from .OS import StudentQueryManagement as student
+from .OS import Process as process
+
 from .forms import FacultyQueryForm, StudentQueryForm, ProcessForm
 from .models import *
+from datetime import datetime
 
 # Create your views here.
 
@@ -28,6 +33,12 @@ class FacultyCreateView(CreateView):
     template_name = 'roundrobin_createview.html'
     fields = ['name', 'quantumTime']
     success_url = '/'
+    extra_context = {'date':datetime.now()}
+
+    def get_context_data(self, **kwargs):
+        context = super(FacultyCreateView, self).get_context_data()
+        context.update(self.extra_context)
+        return context
 
 
 class StudentCreateView(CreateView):
@@ -35,11 +46,26 @@ class StudentCreateView(CreateView):
     template_name = 'roundrobin_createview.html'
     fields = ['name', 'quantumTime']
     success_url = '/'
+    extra_context = {'date': datetime.now()}
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentCreateView, self).get_context_data()
+        context.update(self.extra_context)
+        return context
 
 
 class ProcessCreateView(CreateView):
     model = Process
     template_name = 'roundrobin_createview.html'
-    fields = ['name', 'quantumTime']
+    fields = ['name', 'arrivalTime', 'burstTime']
     success_url = '/'
+    extra_context = {'date': datetime.now()}
 
+    def get_context_data(self, **kwargs):
+        context = super(ProcessCreateView, self).get_context_data()
+        context.update(self.extra_context)
+        return context
+
+class ProcessDetailView(ListView):
+    model = Process
+    template_name = 'process_detail_view.html'
