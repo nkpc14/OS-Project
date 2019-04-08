@@ -1,4 +1,7 @@
-from collections import deque
+class Universal:
+    UniversalTimer = 0
+    PREEMPTION = list()
+    STUDENT_AVAILABLE = False
 
 
 class Queue:
@@ -24,6 +27,7 @@ class ManagementClass:
 
     def incrementTimer(self):
         self.mainTimer += 1
+        Universal.UniversalTimer = self.mainTimer
 
 
 class Process:
@@ -74,7 +78,6 @@ class FacultyQueryManagement:
             )
             self.facultyProcess.append(process)
 
-
     def printProcessList(self):
         for process in self.facultyProcess:
             print(process.process_name)
@@ -109,6 +112,104 @@ class FacultyQueryManagement:
         print("Average Waiting Time = ", (totalWaitingTime / self.startLength))
         print("Average Turn Around Time = ", (totalTurnAroundTime / self.startLength))
 
+    def checkProcessQueue(self):
+        if len(self.processQueue) == 0:
+            return True
+        else:
+            return True
+
+    def getWaitingTimeMain(self):
+        temp = None
+        self.createProcesses()
+        mainTimer = ManagementClass()
+        print("Main Timer First: " + str(mainTimer.mainTimer))
+        self.length = len(self.facultyProcess)
+
+        # Sorting the list at ArrivalTime
+        self.facultyProcess.sort(key=lambda x: x.arrival_time, reverse=False)
+        # self.printProcessList()
+        # Copying the Burst Time to Remaining Time of each process
+        for process in self.facultyProcess:
+            process.remaining = process.burst_time
+
+        while self.checkEmpty():
+            print("Main Timer While: " + str(mainTimer.mainTimer))
+            # Checking if the Process Queue is empty
+            if self.checkProcessQueue():
+
+                # Add one process from Faculty Queue to Process Queue
+                self.processQueue.append(self.facultyProcess.pop(0))
+
+                for process in self.processQueue:
+
+                    # If mainTimer is greater than arrivalTime than the process has come
+                    if mainTimer.mainTimer >= process.arrival_time:
+
+                        # Check if the process is remaining to be executed
+                        if process.remainingTime > 0:
+
+                            # if process remainingTime is greater than quantumTime
+                            if process.remainingTime >= self.quantum_time:
+
+                                # keep incrementing the mainTimer
+                                for _ in range(self.quantum_time):
+                                    mainTimer.incrementTimer()
+                                process.remainingTime -= self.quantum_time
+
+                                temp = self.facultyProcess[0]
+                                if not (mainTimer.mainTimer >= temp.arrival_time):
+                                    pass
+                            else:
+
+                                for _ in range(process.remainingTime):
+                                    mainTimer.incrementTimer()
+                                process.waitingTime = mainTimer.mainTimer - process.burst_time
+                                process.remainingTime = 0
+                                self.executedProcess.append(self.processQueue.pop(0))
+                        else:
+                            # if the Burst Time was 0 Initially
+                            # Then pop this process and Add it to Executed Queue
+                            self.executedProcess.append(self.processQueue.pop(0))
+                    else:
+                        # if the mainTimer less than Arrival Time
+                        # Then simply increment the mainTimer
+                        mainTimer.incrementTimer()
+            else:
+                # if the Process Queue is Not Empty
+
+                # Fetch a Process
+                for process in self.processQueue:
+
+                    # If mainTimer is greater than arrivalTime than the process has come
+                    if mainTimer.mainTimer >= process.arrival_time:
+
+                        # Check if the process is remaining to be executed
+                        if process.remainingTime > 0:
+
+                            # if process remainingTime is greater than quantumTime
+                            if process.remainingTime >= self.quantum_time:
+
+                                # keep incrementing the mainTimer
+                                for _ in range(self.quantum_time):
+                                    mainTimer.incrementTimer()
+                                process.remainingTime -= self.quantum_time
+                            else:
+
+                                for _ in range(process.remainingTime):
+                                    mainTimer.incrementTimer()
+                                process.waitingTime = mainTimer.mainTimer - process.burst_time
+                                process.remainingTime = 0
+                                self.executedProcess.append(self.processQueue.pop(0))
+                        else:
+                            # if the Burst Time was 0 Initially
+                            # Then pop this process and Add it to Executed Queue
+                            self.executedProcess.append(self.processQueue.pop(0))
+                    else:
+                        # if the mainTimer less than Arrival Time
+                        # Then simply increment the mainTimer
+                        mainTimer.incrementTimer()
+            mainTimer.incrementTimer()
+
     def startExecution(self):
         self.length = len(self.facultyProcess)
         # Creating Process List
@@ -128,7 +229,7 @@ class FacultyQueryManagement:
             print("Popped +" + present_process.process_name)
             self.executeProcess(present_process, mainTimer)
 
-    def getWaitingTime(self,process):
+    def getWaitingTime(self, process):
         TAT = process.endTime - process.arrival_time
         print("ENDTIME: " + str(process.endTime))
         print("ARRIVAL TIME: " + str(process.arrival_time))
@@ -182,6 +283,248 @@ class FacultyQueryManagement:
             return True
         else:
             return False
+
+
+# -------------------------------------------------------------STUDENT ------------------------------------------------
+
+class StudentQueryManagement:
+    # QueryManagement class to handel Query
+    def __init__(self):
+        # Initializing default values
+        self.count = 0
+        self.quantum_time = 2
+        self.studentProcess = list()
+        self.Time = 0
+        self.no_of_process = 0
+        self.processQueue = list()
+        self.executedProcess = list()
+        self.length = 0
+        self.startLength = len(self.studentProcess)
+
+    def createProcesses(self):
+        N = int(input("Enter the number of process you want to create"))
+        for _ in range(N):
+            process = Process()
+            process.createProcess(
+                input("Enter the Name of the Process: "),
+                input("Enter the Arrival Time of the Process: "),
+                input("Enter the Burst Time of the Process: ")
+            )
+            self.studentProcess.append(process)
+
+    def printProcessList(self):
+        for process in self.studentProcess:
+            print(process.process_name)
+            print("Remaining Time: " + str(process.remainingTime))
+            print("Arrival Time: " + str(process.arrival_time))
+
+    def getTurnAroundTime(self):
+        for process in self.executedProcess:
+            process.turnAroundTime = process.burst_time + process.waitingTime
+
+    def checkEmpty(self):
+        if len(self.studentProcess) == 0:
+            print("Faculty  empty")
+            return True
+        else:
+            print("Faculty not empty")
+            return False
+
+    def getAverageTime(self):
+        self.startExecution()
+        self.getTurnAroundTime()
+
+        totalWaitingTime = 0
+        totalTurnAroundTime = 0
+
+        for process in self.executedProcess:
+            totalWaitingTime += process.waitingTime
+            totalTurnAroundTime += process.turnAroundTime
+            print(
+                " " + process.process_name + " " + str(process.burst_time) + " " + str(process.waitingTime) + " " + str(
+                    process.turnAroundTime))
+        print("Average Waiting Time = ", (totalWaitingTime / self.startLength))
+        print("Average Turn Around Time = ", (totalTurnAroundTime / self.startLength))
+
+    def checkProcessQueue(self):
+        if len(self.processQueue) == 0:
+            return True
+        else:
+            return True
+
+    def getWaitingTimeMain(self):
+        temp = None
+        self.createProcesses()
+        mainTimer = ManagementClass()
+        print("Main Timer First: " + str(mainTimer.mainTimer))
+        self.length = len(self.studentProcess)
+
+        # Sorting the list at ArrivalTime
+        self.studentProcess.sort(key=lambda x: x.arrival_time, reverse=False)
+        # self.printProcessList()
+        # Copying the Burst Time to Remaining Time of each process
+        for process in self.studentProcess:
+            process.remaining = process.burst_time
+
+        while self.checkEmpty():
+            print("Main Timer While: " + str(mainTimer.mainTimer))
+            # Checking if the Process Queue is empty
+            if self.checkProcessQueue():
+
+                # Add one process from Faculty Queue to Process Queue
+                self.processQueue.append(self.studentProcess.pop(0))
+
+                for process in self.processQueue:
+
+                    # If mainTimer is greater than arrivalTime than the process has come
+                    if mainTimer.mainTimer >= process.arrival_time:
+
+                        # Check if the process is remaining to be executed
+                        if process.remainingTime > 0:
+
+                            # if process remainingTime is greater than quantumTime
+                            if process.remainingTime >= self.quantum_time:
+
+                                # keep incrementing the mainTimer
+                                for _ in range(self.quantum_time):
+                                    mainTimer.incrementTimer()
+                                process.remainingTime -= self.quantum_time
+
+                                temp = self.studentProcess[0]
+                                if not (mainTimer.mainTimer >= temp.arrival_time):
+                                    pass
+                            else:
+
+                                for _ in range(process.remainingTime):
+                                    mainTimer.incrementTimer()
+                                process.waitingTime = mainTimer.mainTimer - process.burst_time
+                                process.remainingTime = 0
+                                self.executedProcess.append(self.processQueue.pop(0))
+                        else:
+                            # if the Burst Time was 0 Initially
+                            # Then pop this process and Add it to Executed Queue
+                            self.executedProcess.append(self.processQueue.pop(0))
+                    else:
+                        # if the mainTimer less than Arrival Time
+                        # Then simply increment the mainTimer
+                        mainTimer.incrementTimer()
+            else:
+                # if the Process Queue is Not Empty
+
+                # Fetch a Process
+                for process in self.processQueue:
+
+                    # If mainTimer is greater than arrivalTime than the process has come
+                    if mainTimer.mainTimer >= process.arrival_time:
+
+                        # Check if the process is remaining to be executed
+                        if process.remainingTime > 0:
+
+                            # if process remainingTime is greater than quantumTime
+                            if process.remainingTime >= self.quantum_time:
+
+                                # keep incrementing the mainTimer
+                                for _ in range(self.quantum_time):
+                                    mainTimer.incrementTimer()
+                                process.remainingTime -= self.quantum_time
+                            else:
+
+                                for _ in range(process.remainingTime):
+                                    mainTimer.incrementTimer()
+                                process.waitingTime = mainTimer.mainTimer - process.burst_time
+                                process.remainingTime = 0
+                                self.executedProcess.append(self.processQueue.pop(0))
+                        else:
+                            # if the Burst Time was 0 Initially
+                            # Then pop this process and Add it to Executed Queue
+                            self.executedProcess.append(self.processQueue.pop(0))
+                    else:
+                        # if the mainTimer less than Arrival Time
+                        # Then simply increment the mainTimer
+                        mainTimer.incrementTimer()
+            mainTimer.incrementTimer()
+
+    def startExecution(self):
+        self.length = len(self.studentProcess)
+        # Creating Process List
+        print("Creating Process List")
+        self.createProcesses()
+        self.startLength = len(self.studentProcess)
+        mainTimer = ManagementClass()
+        print("mainTimer Initial Value: " + str(mainTimer.mainTimer))
+        print("Initial List")
+        self.printProcessList()
+        self.studentProcess.sort(key=lambda x: x.arrival_time, reverse=False)
+        print("Sorted List")
+        self.printProcessList()
+
+        while not self.checkEmpty():
+            present_process = self.studentProcess.pop(0)
+            print("Popped +" + present_process.process_name)
+            self.executeProcess(present_process, mainTimer)
+
+    def getWaitingTime(self, process):
+        TAT = process.endTime - process.arrival_time
+        print("ENDTIME: " + str(process.endTime))
+        print("ARRIVAL TIME: " + str(process.arrival_time))
+        process.waitingTime = TAT - process.burst_time
+        print("UPDATING WAITING TIME: " + str(process.waitingTime))
+
+    def executeProcess(self, process, mainTimer):
+        while True:
+            if mainTimer.mainTimer >= process.arrival_time:
+                print("mainTimer.mainTimer >= process.arrival_time")
+                if process.remainingTime > 0:
+                    print("process.remainingTime > 0")
+                    if process.remainingTime >= self.quantum_time:
+                        print("process.remainTime >= self.quantum_time")
+                        print("Incrementing mainTimer Quantum")
+                        for _ in range(self.quantum_time):
+                            mainTimer.incrementTimer()
+                        print("Quantum mainTimer :" + str(mainTimer.mainTimer))
+                        process.remainingTime -= self.quantum_time
+                        print("Updated RemainingTime" + str(process.remainingTime))
+                        if process.remainingTime == 0:
+                            # process.waitingTime = mainTimer.mainTimer - process.burst_time
+                            process.endTime = mainTimer.mainTimer
+                            self.getWaitingTime(process)
+                            self.executedProcess.append(process)
+                            print("EXECUTED EVEN : " + process.process_name)
+                    else:
+                        for _ in range(process.remainingTime):
+                            mainTimer.incrementTimer()
+                        # process.waitingTime = mainTimer.mainTimer - process.burst_time
+                        process.remainingTime = 0
+                        print("Appending To Executed Process: " + str(process.process_name))
+                        process.endTime = mainTimer.mainTimer
+                        self.getWaitingTime(process)
+                        self.executedProcess.append(process)
+                        print("EXECUTED ODD : " + process.process_name)
+                else:
+                    print("RemainingTime < 0 LOL!")
+            else:
+                print("mainTimer.mainTimer < process.arrival_time")
+                mainTimer.incrementTimer()
+                print("mainTimer value is :" + str(mainTimer.mainTimer))
+            if not (self.length == 0):
+                if self.stopAt(process, mainTimer, self.studentProcess[0]):
+                    break
+            else:
+                if not process.remainingTime == 0:
+                    self.studentProcess = [process] + self.studentProcess
+                break
+
+    def stopAt(self, process, mainTimer, next_process):
+        if next_process.arrival_time <= mainTimer.mainTimer:
+            return True
+        else:
+            return False
+
+    def checkFacultyProcessArrival(self):
+        if len(Universal.PREEMPTION) == 0:
+            return False
+        else:
+            return True
 
 
 if __name__ == "__main__":
