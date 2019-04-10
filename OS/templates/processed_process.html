@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block detail %}
+<!--<h2>{{processed}}</h2>-->
+<div class="jumbotron">
+   <h1 class="alert alert-danger">Processed Process</h1>
+ {% for item in processed %}
+        <p class="alert alert-info">{{item}}</p>
+    {% endfor %}
+</div>
+<a href="{% url 'list' %}">Process List</a>
+<!--<ul>-->
+    <!--{% for process in processed %}-->
+    <!--<li>Name : {{process.process_name}}</li>-->
+    <!--<li>Burst Time: {{process.burst_time}}</li>-->
+    <!--<li>Waiting Time: {{process.waitingTime}}</li>-->
+    <!--<li>Turn Around Time: {{process.turnAroundTime}}</li>-->
+    <!--<li>Priority: {{process.priority}}</li>-->
+    <!--<br>-->
+    <!--{% endfor %}-->
+<!--</ul>-->
+
+{% endblock %}

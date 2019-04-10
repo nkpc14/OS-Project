@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block detail %}
+    <ul>
+        <!--{% for process in object_list %}-->
+        <!--<li><a href="{% url 'detail' process.pk %}">{{process}}</a></li>-->
+        <!--{% endfor %}-->
+
+
+        <div class="jumbotron">
+            <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+                {% for process in object_list %}
+                 <div  class="card {% if process.priority !=   1 %} alert alert-danger{% endif %}" style="width: 18rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">{{process.name|title}}</h5>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Arrival Time: {{process.arrivalTime}}</li>
+                    <li class="list-group-item">Burst Time:{{process.burstTime}}</li>
+                    <li class="list-group-item">Waiting Time:{{process.waitingTime}}</li>
+                    <li class="list-group-item">Turn Around Time:{{process.turnAroundTime}}</li>
+                  </ul>
+                  <div class="card-body">
+                    <a href="#" class="card-link">User: {{process.user}}</a>
+                    <a href="#" class="card-link">Process Id : {{process.pk}}</a>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+        <!--{% for process in object_list %}-->
+            <!--<li>Name: {{process.name}}</li>-->
+            <!--<li>Arrivale Time: {{process.arrivalTime}}</li>-->
+            <!--<li>Burst Time: {{process.burstTime}}</li>-->
+            <!--<li>Completion Time: {{process.completionTime}}</li>-->
+            <!--<li>Remaining Time: {{process.remainingTime}}</li>-->
+            <!--<li>Waiting Time: {{process.waitingTime}}</li>-->
+            <!--<li>Turn Around Time: {{process.turnAroundTime}}</li>-->
+        <!--{% endfor %}-->
+    </ul>
+
+{% endblock %}

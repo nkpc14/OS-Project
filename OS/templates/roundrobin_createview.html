@@ -2,11 +2,23 @@
 
 {% block create %}
 
-<h1>Create View For Round Robin</h1>
-    <p>{{date}}</p>
-<form action="" method="POST">
+<div class="jumbotron">
+    <p class="alert alert-info">{{date}}</p>
+        <div class="alert alert-primary" role="alert">
+          Create View For Round Robin
+        </div>
+            <!--<p>{{model}}</p>-->
+<form  action="" method="POST">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="Submit">
+    <!--<div class="jumbotron">-->
+        <!--{{form.as_p}}-->
+    <!--</div>-->
+    {% for field in form%}
+    <label for="{{field.id_for_label}}" class="label">{{field.html_name|title}}</label>
+     {{field}}
+    {% endfor %}
+    <input class="btn btn-primary" type="Submit">
 </form>
+    <a class="btn btn-danger" href="{% url 'delete' %}">Delete</a>
+</div>
 {% endblock %}

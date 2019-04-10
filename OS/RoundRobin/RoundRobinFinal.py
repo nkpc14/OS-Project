@@ -1,3 +1,6 @@
+from .models import Process as ps,UserQueue,QunatumTime
+from django.shortcuts import render
+
 class Universal:
     UniversalTimer = 0
     PREEMPTION = list()
@@ -54,7 +57,6 @@ class Process:
         self.remainingTime = self.burst_time
         self.priority = int(priority)
 
-
 class FacultyQueryManagement:
     # QueryManagement class to handel Query
     def __init__(self):
@@ -69,16 +71,40 @@ class FacultyQueryManagement:
         self.length = 0
         self.startLength = len(self.facultyProcess)
 
+    def getData(self):
+        # return self.executedProcess
+        return self.executedProcess
+
+    def setQuantumTime(self,quantumTime):
+        self.quantum_time = quantumTime
+
     def createProcesses(self):
-        N = int(input("Enter the number of process you want to create"))
-        for _ in range(N):
+        # faculty = UserQueue.objects.get(id=1)
+        # process1 = faculty.process_set.all()
+        quantumTime = QunatumTime.objects.all()
+        for item in quantumTime:
+            self.setQuantumTime(item.quantumTime)
+        process1 = ps.objects.filter(user=UserQueue.objects.get(id=1))
+        for item in process1:
             process = Process()
-            process.createProcess(
-                input("Enter the Name of the Process: "),
-                input("Enter the Arrival Time of the Process: "),
-                input("Enter the Burst Time of the Process: "),
-                input("Add to :\n0.Faculty Queue\n1.Student Queue")
-            )
+            process.createProcess(item.name,
+                                  item.arrivalTime,
+                                  item.burstTime,
+                                  0
+                                  )
+            self.facultyProcess.append(process)
+
+        # process2 = Process()
+        # student = UserQueue.objects.get(id=2)
+        # process1 = student.process_set.all()
+        process1 = ps.objects.filter(user=UserQueue.objects.get(id=2))
+        for item in process1:
+            process = Process()
+            process.createProcess(item.name,
+                                   item.arrivalTime,
+                                   item.burstTime,
+                                   1
+                                   )
             self.facultyProcess.append(process)
 
     def printProcessList(self):
@@ -116,6 +142,7 @@ class FacultyQueryManagement:
                     process.turnAroundTime))
         print("Average Waiting Time = ", (totalWaitingTime / self.startLength))
         print("Average Turn Around Time = ", (totalTurnAroundTime / self.startLength))
+        print("QUNATUM TIME: " + str(self.quantum_time))
 
     def checkProcessQueue(self):
         if len(self.processQueue) == 0:

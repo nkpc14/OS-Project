@@ -1,24 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Process Detailed View</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block detail %}
 
-    <ul>
-        {% for process in object_list %}
-            <li>Name: {{process.name}}</li>
-            <li>Arrivale Time: {{process.arrivalTime}}</li>
-            <li>Burst Time: {{process.burstTime}}</li>
-            <li>Completion Time: {{process.completionTime}}</li>
-            <li>Remaining Time: {{process.remainingTime}}</li>
-            <li>Waiting Time: {{process.waitingTime}}</li>
-            <li>Turn Around Time: {{process.turnAroundTime}}</li>
-        {% endfor %}
-    </ul>
+    <div class="jumbotron">
+        <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{detail.name|title}}</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Arrival Time: {{detail.arrivalTime}}</li>
+        <li class="list-group-item">Burst Time: {{detail.burstTime}}</li>
+      </ul>
+      <div class="card-body">
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+      </div>
+    </div>
+    </div>
 
-</body>
-</html>
+{% endblock %}
 
 
